@@ -1,0 +1,6 @@
+importFrom("illuminaio", "readIDAT")
+
+export(
+	champ.import, 
+	champ.message 
+	) 

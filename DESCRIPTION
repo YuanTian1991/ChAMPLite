@@ -1,0 +1,18 @@
+Package: ChAMPLite
+Type: Package
+Title: Chip Analysis Methylation Pipeline for Illumina HumanMethylation450 and EPIC
+Version: 0.0.1
+Date: 2020-4-12
+Description: This is the a new beta version of ChAMP, the popular DNA Methylation Array Analysis Pipeline Software
+Authors@R: c(person("Tian","Yuan", role = c("cre", "aut"), email = "champ450k@gmail.com"))
+License: GPL-3
+VignetteBuilder: knitr
+Depends: R (>= 3.6)
+Imports: illuminaio
+biocViews: Microarray, MethylationArray, Normalization, TwoChannel, CopyNumber, DNAMethylation
+Suggests: knitr,rmarkdown
+Author: Yuan Tian [cre,aut]
+Maintainer: Yuan Tian  <champ450k@gmail.com>
+NeedsCompilation: no
+LazyData: true
+Packaged: 2018-03-22 04:29:01 UTC; tiany
