@@ -8,16 +8,16 @@ library("glue")
 
 champ.PrepareManifest <- function(manifestPath,
                                   skip = "auto") {
-    
+
     champ.paramCheck.PrepareManifest(manifestPath, skip)
 
     skip_lines <- NULL
-    if(skip == "auto") {
+    if(skip[1] == "auto") {
         manifest <- fread(manifestPath, fill=TRUE, showProgress=FALSE)
         skip_lines$assay <- grep('\\[Assay\\]', as.data.frame(manifest[, 1])[,1])
         skip_lines$controls <- grep('\\[Controls\\]', as.data.frame(manifest[, 1])[,1])
 
-        message("[Estimate Skipline] Success.")
+        message("[Process] Estimate skipline Success.")
     } else {
         skip_lines$assay <- skip[1]
         skip_lines$controls <- skip[2]
@@ -47,10 +47,14 @@ champ.PrepareManifest <- function(manifestPath,
     pChannal <- c(rep("g+r", nrow(typeII)), rep("r", nrow(typeIRed)), rep("g", nrow(typeIGrn)))
     probeInfo <- data.frame(CpG = mName, mIndex = mIndex, uIndex = uIndex, channel = pChannal)
     rownames(probeInfo) <- probeInfo$CpG
+    message("[Process] Probe information data frame created. Success.")
 
-    message("[Process] probe information data frame created. Success.")
+    controlProbes <- fread(manifestPath, head = FALSE, skip=skip_lines$controls, fill=TRUE)[,1:4]
+    colnames(controlProbes) <- c("probe", "type", "colour", "value")
+    controlProbes <- as.data.frame(controlProbes)
+    message("[Process] Control probe data frame created. Success.")
     
-    return(probeInfo)
+    return(list(probeInfo=probeInfo, controlProbes=controlProbes))
 }
 
 
@@ -59,9 +63,11 @@ champ.paramCheck.PrepareManifest <- function(manifestPath, skip) {
     if(class(manifestPath) != "character") {
         stop("[Parameter Check] Error: parameter manifest_path must be a string character to manifest path.")
     }
-    if(skip != "auto" & (class(skip) != "numeric" & length(skip) == 2)) {
-        stop("[Parameter Check] Error: array_skip must be 'auto' or a two length integer vector.")
+    if(class(skip) == "character") {
+        if(skip != "auto") stop("[Parameter Check] Error: array_skip must be 'auto' or a two length integer vector.")
     }
-
+    if(class(skip) == "numeric") {
+        if(length(skip) != 2) stop("[Parameter Check] Error: array_skip must be 'auto' or a two length integer vector.")
+    }
     message("[Parameter Check] Success.")
 }
